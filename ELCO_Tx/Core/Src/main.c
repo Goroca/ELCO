@@ -46,15 +46,8 @@ TIM_HandleTypeDef htim15;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-uint8_t count=0; //contador de 2000ms
-uint8_t data1[4]={1,0,0,0};
-uint8_t data2[4]={1,0,0,1};
-uint8_t data3[4]={1,0,1,0};
-uint8_t data4[4]={1,0,1,1};
-uint8_t data5[4]={1,1,0,0};
-uint8_t data6[4]={1,1,0,1};
-uint8_t data7[4]={1,1,1,0};
-uint8_t data8[4]={1,1,1,1};
+uint8_t count=0;
+uint8_t data1[4]={1,0,1,0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -271,6 +264,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PA10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   /*Configure GPIO pin : PA12 */
   GPIO_InitStruct.Pin = GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
@@ -290,6 +289,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	//Interrupcion externa realizada con la pulsacion de un boton
 	if(GPIO_Pin == GPIO_PIN_12){
 		HAL_TIM_Base_Start_IT(&htim15); // Start del timer como interrupción de 1ms
+	}
+
+	if(GPIO_Pin == GPIO_PIN_10){
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10));
 	}
 }
 
